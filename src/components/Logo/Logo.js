@@ -3,6 +3,7 @@ import Tilt from "react-tilt";
 import eyemask from "./eyemask.png";
 import "./Logo.css";
 
+// Logo is by Freepik from flaticon.com
 const Logo = () => {
 	return (
 		<div className="ma4 mt0 ">
