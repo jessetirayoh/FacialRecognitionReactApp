@@ -3,8 +3,15 @@ import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
+import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import "./App.css";
 import Particles from "react-particles-js";
+import Clarifai from "clarifai";
+
+// Initialize api key. This will also work in your browser via http://browserify.org/
+const app = new Clarifai.App({
+	apiKey: "ca45c5b3c01a4806a2ccb7de840adf33"
+});
 
 const particlesOptions = {
 	particles: {
@@ -36,6 +43,30 @@ const particlesOptions = {
 };
 
 class App extends Component {
+	constructor() {
+		super();
+		this.state = {
+			input: "",
+			imageUrl: ""
+		};
+	}
+
+	onInputChange = event => {
+		console.log(event.target.value);
+	};
+
+	onButtonSubmit = () => {
+		this.setState({ imageUrl: this.state.input });
+		app.models.predict(Clarifai.FACE_DETECT_MODEL, "https://samples.clarifai.com/metro-north.jpg").then(
+			function(response) {
+				console.log(response);
+			},
+			function(err) {
+				// there was an error
+			}
+		);
+	};
+
 	render() {
 		return (
 			<div className="App">
@@ -43,8 +74,8 @@ class App extends Component {
 				<Navigation />
 				<Logo />
 				<Rank />
-				<ImageLinkForm />
-				{/* <FaceRecognition></FaceRecognition> */}
+				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+				<FaceRecognition imageUrl={this.state.imageUrl} />
 			</div>
 		);
 	}
